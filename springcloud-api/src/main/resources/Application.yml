@@ -1,0 +1,16 @@
+server:
+  #端口号
+  port: 8088
+
+spring:
+  application:
+    name: springcloud-client #服务名称
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    register-with-eureka: true #是否注册到eureka服务器
+    fetch-registry: true #是否可检索
+    service-url:
+      defaultZone: http://localhost:8080/eureka/ #服务中心

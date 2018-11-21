@@ -1,0 +1,53 @@
+server:
+  #端口号
+  port: 8080
+
+#数据库连接配置 druid
+spring:
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/usernew?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: root
+    type: com.alibaba.druid.pool.DruidDataSource
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    filters: stat,wall,log4j
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+    useGlobalDataSourceStat: true
+
+  #spring.application.name
+  application:
+    name: springcloud-provider
+
+
+mybatis:
+  # 配置xml 的扫描路径
+  mapper-locations: classpath*:/mapper/*.xml
+  check-config-location: true
+  type-aliases-package: com.springcloud.test.entity
+  configuration:
+    mapUnderscoreToCamelCase: true
+
+pagehelper:
+  autoDialect: true
+  closeConn: false
+  reasonable: true
+
+eureka:
+  client:
+    register-with-eureka: true    #默认是true，将自己注册到eureka上
+    fetch-registry: false    #是否从eureka上获取信息，由于本案例是单机，无需从别的eureka上获取注册信息
+    service-url:
+      defaultZone: http://localhost:8080/eureka    #设置与eureka交互的地址，
+      #查询服务和注册服务都需要依赖这个地址，默认是：http://localhost:8761/eureka

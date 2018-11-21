@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.springcloud.test.mapper.UserMapper">
+
+    <select id="findUserByUsernameLike" resultType="com.springcloud.test.entity.User">
+        SELECT
+          id,
+          name,
+          age,
+          number
+        FROM
+          t_user
+        WHERE
+          name like concat('%',#{name},'%')
+    </select>
+
+    <select id="getUserById" resultType="com.springcloud.test.entity.User">
+        SELECT
+          id,
+          name,
+          age,
+          number
+        FROM
+          t_user
+        WHERE
+          id = #{id}
+    </select>
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="id" parameterType="com.springcloud.test.entity.User">
+        insert into t_user(name,age,number)values(
+            #{name},
+            #{age},
+            #{number}
+        )
+    </insert>
+</mapper>

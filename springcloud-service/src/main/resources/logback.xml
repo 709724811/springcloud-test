@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<pattern>%-16(%d{MM-dd HH:mm:ss.SSS}) %-5level [%X{req.id}] %logger{1} - %msg%n</pattern>
+		</layout>
+	</appender>
+
+	<appender name="file"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>/data/logs/webtest/webtest.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>/data/logs/webtest/webtest.%d{yyyyMMdd}.%i.log</FileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>100MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>webtest|[%X{req.id}]|%date|%level|[%thread]|%logger|%msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="org.springframework" level="WARN" />
+	<logger name="org.mybatis" level="DEBUG" />
+
+	<root level="INFO">
+		<appender-ref ref="stdout" />
+	</root>
+
+</configuration>

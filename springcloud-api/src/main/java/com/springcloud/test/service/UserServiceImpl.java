@@ -21,7 +21,7 @@ import java.util.Map;
  * @Date 2018-11-21 10:57
  * @Company www.midea.com
  */
-@Service
+@Service("iUserService")
 public class UserServiceImpl implements IUserService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());

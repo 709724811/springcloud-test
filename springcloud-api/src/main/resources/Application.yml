@@ -13,4 +13,4 @@ eureka:
     register-with-eureka: true #是否注册到eureka服务器
     fetch-registry: true #是否可检索
     service-url:
-      defaultZone: http://localhost:8080/eureka/ #服务中心
+      defaultZone: http://10.16.85.199:8091/eureka/,http://10.16.85.199:8092/eureka/,http://10.16.85.199:8093/eureka/ #服务中心

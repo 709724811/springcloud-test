@@ -1,9 +1,15 @@
 server:
   #端口号
   port: 8087
+  servlet:
+    context-path: /provider
 
 #数据库连接配置 druid
 spring:
+  #spring.application.name
+  application:
+    name: provider
+
   datasource:
     driverClassName: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost:3306/usernew?useUnicode=true&characterEncoding=utf-8&useSSL=false
@@ -25,10 +31,100 @@ spring:
     filters: stat,wall,log4j
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
     useGlobalDataSourceStat: true
+    #deny: 192.168.1.0/24
+    loginUsername: admin
+    loginPassword: admin
 
-  #spring.application.name
-  application:
-    name: springcloud-provider
+  datacluster:
+    nodes:
+      - name: mainNode
+        writeHost: datasource_if
+        readHost: datasource_if
+        isDefault: true
+      - name: omsNode
+        writeHost: datasource_oms
+        readHost: datasource_oms
+        isDefault: false
+    datasource_if:
+      platform: mysql
+      url: jdbc:mysql://localhost:3306/devif?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&autoReconnect=true&failOverReadOnly=false
+      username: root
+      password: root
+      driverClassName: com.mysql.jdbc.Driver
+      type: com.alibaba.druid.pool.DruidDataSource
+      initialSize: 5
+      minIdle: 5
+      maxActive: 50
+      # 配置获取连接等待超时的时间
+      maxWait: 60000
+      validationQuery: SELECT 1
+      testOnBorrow: false
+      testOnReturn: false
+      testWhileIdle: true
+      minEvictableIdleTimeMillis: 25200000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      removeAbandoned: true
+      removeAbandonedTimeout: 1800
+      # 打开PSCache，并且指定每个连接上PSCache的大小
+      poolPreparedStatements: true
+      maxPoolPreparedStatementPerConnectionSize: 20
+      logAbandoned: true
+      # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+      filters: stat,wall,log4j
+      useGlobalDataSourceStat: true
+    datasource_oms:
+      platform: mysql
+      url: jdbc:mysql://localhost:3306/omsdev?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&autoReconnect=true&failOverReadOnly=false
+      username: root
+      password: root
+      driverClassName: com.mysql.jdbc.Driver
+      type: com.alibaba.druid.pool.DruidDataSource
+      initialSize: 5
+      minIdle: 5
+      maxActive: 50
+      # 配置获取连接等待超时的时间
+      maxWait: 60000
+      validationQuery: SELECT 1
+      testOnBorrow: false
+      testOnReturn: false
+      testWhileIdle: true
+      minEvictableIdleTimeMillis: 25200000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      removeAbandoned: true
+      removeAbandonedTimeout: 1800
+      # 打开PSCache，并且指定每个连接上PSCache的大小
+      poolPreparedStatements: true
+      maxPoolPreparedStatementPerConnectionSize: 20
+      logAbandoned: true
+      # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+      filters: stat,wall,log4j
+      useGlobalDataSourceStat: true
+    druid:
+      allow:
+      deny:
+      loginUsername: admin
+      loginPassword: 123456
+      resetEnable: true
+      #访问路径
+      druidUrl: /druid/*
+      exclusions: /druid/*,*.js,*.gif,*.jpg,*.png,*.css,*.ico
+      monitorPackages: com.midea.*.service.*,com.midea.*.service.impl.*,com.midea.*.mapper.* #GroupId
+
+  redis:
+    #nodeList: 10.17.154.200:6379
+    nodeList: localhost:6380,localhost:6381,localhost:6382
+    enabled: true   #是否初始化redis服务
+    #password: pHej06Irl
+    timeOut: 30     #连接超时时间
+    soTimeout: 20   #读取数据超时时间
+    maxAttempts: 3  #最大重试次数
+    maxTotal: 30    #资源池中最大连接数 默认=8
+    maxIdle: 20     #资源池允许最大空闲的连接数，默认8
+    minIdle: 10     #资源池确保最少空闲的连接数 默认值0
+    maxWaitMillis: 30  #调用者的最大等待时间，-1不超时
+    timeBetweenEvictionRunsMillis: -1   #空闲资源的检测周期(单位为毫秒), 默认值 -1
 
 
 mybatis:
@@ -44,12 +140,18 @@ pagehelper:
   closeConn: false
   reasonable: true
 
+feign:
+  name: provider
+  hystrix:
+    enabled: true
+
 eureka:
   client:
+    name: provider
     register-with-eureka: true    #默认是true，将自己注册到eureka上
-    fetch-registry: false    #是否从eureka上获取信息，由于本案例是单机，无需从别的eureka上获取注册信息
+    fetch-registry: true    #是否从eureka上获取信息，由于本案例是单机，无需从别的eureka上获取注册信息
     service-url:
-      defaultZone: http://localhost:8080/eureka    #设置与eureka交互的地址，
+      defaultZone: http://10.16.85.199:8091/eureka/,http://10.16.85.199:8092/eureka/,http://10.16.85.199:8093/eureka/ #服务中心
       #查询服务和注册服务都需要依赖这个地址，默认是：http://localhost:8761/eureka
   instance:
     prefer-ip-address: true # 将自己的IP注册到Eureka Server。若不配置或设置为false，表示注册微服务所在操作系统的hostname到Eureka Server

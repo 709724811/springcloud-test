@@ -4,8 +4,6 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
 import springfox.documentation.spi.DocumentationType;
@@ -20,12 +18,12 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  */
 @SpringBootApplication(scanBasePackages = {"com.springcloud.test.controller"
         , "com.springcloud.test.service"
+        , "com.springcloud.test.mapper.interceptor"
         , "com.springcloud.test.configuration"})
 @MapperScan(basePackages = {"com.springcloud.test.mapper"})
 @ServletComponentScan
 @EnableSwagger2
 @EnableAsync
-@EnableDiscoveryClient
 public class ApplicationProvider {
 
     public static void main(String[] args) {

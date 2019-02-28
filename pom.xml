@@ -13,7 +13,8 @@
 		<module>springcloud-service</module>
 		<module>springcloud-api</module>
 		<module>springcloud-provider</module>
-	</modules>
+        <module>springcloud-database</module>
+    </modules>
 
     <build>
         <plugins>

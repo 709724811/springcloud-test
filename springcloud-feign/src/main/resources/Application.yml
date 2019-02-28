@@ -1,0 +1,37 @@
+server:
+  #端口号
+  port: 8089
+  servlet:
+    context-path: /comsumer
+
+spring:
+  application:
+    name: comsumer #服务名称
+
+#  #feign 对hytrix的支持
+feign:
+  hystrix:
+    enabled: true
+ribbon:
+  ReadTimeout: 15000
+  ConnectTimeout: 60000
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 20000
+
+provider:
+  name: provider
+
+eureka:
+  instance:
+    hostname: comsumer
+  client:
+    register-with-eureka: true #是否注册到eureka服务器
+    fetch-registry: true #是否可检索
+    service-url:
+      defaultZone: http://10.16.85.199:8091/eureka/,http://10.16.85.199:8092/eureka/,http://10.16.85.199:8093/eureka/ #服务中心
